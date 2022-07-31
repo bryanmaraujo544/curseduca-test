@@ -37,6 +37,7 @@ export const Login = () => {
         }
       } catch {}
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [email, password, isFormValid]
   );
 
