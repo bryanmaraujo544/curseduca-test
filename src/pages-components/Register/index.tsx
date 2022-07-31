@@ -4,10 +4,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { Logo } from 'components/Logo';
-import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 import { isEmailValid } from 'utils/isValidEmail';
 import { isPasswordValid } from 'utils/isPasswordValid';
 import { useErrors } from 'hooks/useErrors';
+import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
+import { HiMail, HiUserCircle, HiKey } from 'react-icons/hi';
 import { Container, Content, Form, InputContainer, Button } from './styles';
 
 export const Register = () => {
@@ -130,7 +131,9 @@ export const Register = () => {
               hasError={inputHasError('name')}
             >
               <div>
-                <div className="icon">f</div>
+                <div className="icon">
+                  <HiUserCircle />
+                </div>
                 <input
                   type="text"
                   placeholder="Nome"
@@ -150,7 +153,9 @@ export const Register = () => {
               hasError={inputHasError('email')}
             >
               <div>
-                <div className="icon">f</div>
+                <div className="icon">
+                  <HiMail />
+                </div>
                 <input
                   type="text"
                   placeholder="Email"
@@ -170,7 +175,9 @@ export const Register = () => {
               hasError={inputHasError('password')}
             >
               <div>
-                <div className="icon">f</div>
+                <div className="icon">
+                  <HiKey />
+                </div>
                 <input
                   type={isPasswordVisible ? 'text' : 'password'}
                   placeholder="Senha"

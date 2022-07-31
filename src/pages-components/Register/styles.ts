@@ -143,6 +143,7 @@ export const InputContainer = styled.div<{
       display: flex;
       justify-content: center;
       align-items: center;
+      font-size: 1.8rem;
     }
 
     .visibility-control {
@@ -179,7 +180,7 @@ export const Button = styled.button`
   font-weight: 600;
   transition: filter 0.2s;
 
-  &:hover {
+  &:not(:disabled)&:hover {
     filter: brightness(0.8);
   }
 `;
