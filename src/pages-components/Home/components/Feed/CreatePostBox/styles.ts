@@ -1,23 +1,10 @@
 import { Button } from 'components/Button';
+import { ContentBox } from 'components/ContentBox';
 import styled from 'styled-components';
 
-export const Container = styled.header`
-  background: ${({ theme }) => theme.colors.gray[200]};
-  border-radius: 1.6rem;
+export const Container = styled(ContentBox)`
   display: flex;
   gap: 1.6rem;
-  padding: 1.6rem;
-`;
-
-export const LeftContainer = styled.div`
-  .profile-img {
-    position: relative;
-    width: 4.8rem;
-    height: 4.8rem;
-    border-radius: 1.2rem;
-    overflow: hidden;
-    border: 2px solid ${({ theme }) => theme.colors.gray[400]};
-  }
 `;
 
 export const MainContainer = styled.div`

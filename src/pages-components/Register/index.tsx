@@ -9,7 +9,14 @@ import { isPasswordValid } from 'utils/isPasswordValid';
 import { useErrors } from 'hooks/useErrors';
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 import { HiMail, HiUserCircle, HiKey } from 'react-icons/hi';
-import { Container, Content, Form, InputContainer, Button } from './styles';
+import {
+  Container,
+  Content,
+  Form,
+  InputContainer,
+  Button,
+  MainContainer,
+} from './styles';
 
 export const Register = () => {
   const [inputActive, setInputActive] = useState('');
@@ -105,129 +112,131 @@ export const Register = () => {
   return (
     <Container>
       <Image src="/images/brushs.png" layout="fill" object-fit="cover" alt="" />
-      <header>
-        <Logo />
-      </header>
-      <Content>
-        <div className="img-container">
-          <Image
-            src="/images/social.svg"
-            height={200}
-            width={200}
-            objectFit="contain"
-            alt=""
-          />
-        </div>
-
-        <Form onSubmit={handleCreateAccout}>
-          <h2>Registre-se</h2>
-          <span className="sub-title">
-            Cadastre na rede social da Curseduca
-          </span>
-
-          <div className="inputs-group">
-            <InputContainer
-              isFocus={inputActive === 'name'}
-              hasError={inputHasError('name')}
-            >
-              <div>
-                <div className="icon">
-                  <HiUserCircle />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Nome"
-                  onFocus={() => setInputActive('name')}
-                  value={name}
-                  onChange={handleChangeName}
-                />
-              </div>
-              {inputHasError('name') && (
-                <span className="error-msg">
-                  {getErrorMessageByFieldName('name')}
-                </span>
-              )}
-            </InputContainer>
-            <InputContainer
-              isFocus={inputActive === 'email'}
-              hasError={inputHasError('email')}
-            >
-              <div>
-                <div className="icon">
-                  <HiMail />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Email"
-                  onFocus={() => setInputActive('email')}
-                  value={email}
-                  onChange={handleChangeEmail}
-                />
-              </div>
-              {inputHasError('email') && (
-                <span className="error-msg">
-                  {getErrorMessageByFieldName('email')}
-                </span>
-              )}
-            </InputContainer>
-            <InputContainer
-              isFocus={inputActive === 'password'}
-              hasError={inputHasError('password')}
-            >
-              <div>
-                <div className="icon">
-                  <HiKey />
-                </div>
-                <input
-                  type={isPasswordVisible ? 'text' : 'password'}
-                  placeholder="Senha"
-                  onFocus={() => setInputActive('password')}
-                  value={password}
-                  onChange={handleChangePassword}
-                />
-                <button
-                  type="button"
-                  onClick={() => setIsPasswordVisible((prev) => !prev)}
-                  className="visibility-control"
-                >
-                  <span>
-                    {isPasswordVisible ? (
-                      <AiOutlineEye />
-                    ) : (
-                      <AiOutlineEyeInvisible />
-                    )}
-                  </span>
-                </button>
-              </div>
-              {inputHasError('password') && (
-                <span className="error-msg">
-                  {getErrorMessageByFieldName('password')}
-                </span>
-              )}
-            </InputContainer>
-            <span className="password-tip">
-              - pelo menos 6 caracteres; letra maiúscula; número
-            </span>
-
-            <label htmlFor="terms">
-              <input
-                type="checkbox"
-                id="terms"
-                onChange={(e) => setIsTermsAgreed(e.target.checked)}
-              />
-              Concordo com os Termos e Condições
-            </label>
+      <MainContainer>
+        <header>
+          <Logo />
+        </header>
+        <Content>
+          <div className="img-container">
+            <Image
+              src="/images/social.svg"
+              height={200}
+              width={200}
+              objectFit="contain"
+              alt=""
+            />
           </div>
 
-          <Button type="submit" disabled={!isFormValid}>
-            Criar minha conta
-          </Button>
+          <Form onSubmit={handleCreateAccout}>
+            <h2>Registre-se</h2>
+            <span className="sub-title">
+              Cadastre na rede social da Curseduca
+            </span>
 
-          <span className="has-account">
-            Já tem uma conta? <Link href="/login">Entre agora</Link>
-          </span>
-        </Form>
-      </Content>
+            <div className="inputs-group">
+              <InputContainer
+                isFocus={inputActive === 'name'}
+                hasError={inputHasError('name')}
+              >
+                <div>
+                  <div className="icon">
+                    <HiUserCircle />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Nome"
+                    onFocus={() => setInputActive('name')}
+                    value={name}
+                    onChange={handleChangeName}
+                  />
+                </div>
+                {inputHasError('name') && (
+                  <span className="error-msg">
+                    {getErrorMessageByFieldName('name')}
+                  </span>
+                )}
+              </InputContainer>
+              <InputContainer
+                isFocus={inputActive === 'email'}
+                hasError={inputHasError('email')}
+              >
+                <div>
+                  <div className="icon">
+                    <HiMail />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Email"
+                    onFocus={() => setInputActive('email')}
+                    value={email}
+                    onChange={handleChangeEmail}
+                  />
+                </div>
+                {inputHasError('email') && (
+                  <span className="error-msg">
+                    {getErrorMessageByFieldName('email')}
+                  </span>
+                )}
+              </InputContainer>
+              <InputContainer
+                isFocus={inputActive === 'password'}
+                hasError={inputHasError('password')}
+              >
+                <div>
+                  <div className="icon">
+                    <HiKey />
+                  </div>
+                  <input
+                    type={isPasswordVisible ? 'text' : 'password'}
+                    placeholder="Senha"
+                    onFocus={() => setInputActive('password')}
+                    value={password}
+                    onChange={handleChangePassword}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setIsPasswordVisible((prev) => !prev)}
+                    className="visibility-control"
+                  >
+                    <span>
+                      {isPasswordVisible ? (
+                        <AiOutlineEye />
+                      ) : (
+                        <AiOutlineEyeInvisible />
+                      )}
+                    </span>
+                  </button>
+                </div>
+                {inputHasError('password') && (
+                  <span className="error-msg">
+                    {getErrorMessageByFieldName('password')}
+                  </span>
+                )}
+              </InputContainer>
+              <span className="password-tip">
+                - pelo menos 6 caracteres; letra maiúscula; número
+              </span>
+
+              <label htmlFor="terms">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  onChange={(e) => setIsTermsAgreed(e.target.checked)}
+                />
+                Concordo com os Termos e Condições
+              </label>
+            </div>
+
+            <Button type="submit" disabled={!isFormValid}>
+              Criar minha conta
+            </Button>
+
+            <span className="has-account">
+              Já tem uma conta? <Link href="/login">Entre agora</Link>
+            </span>
+          </Form>
+        </Content>
+      </MainContainer>
     </Container>
   );
 };

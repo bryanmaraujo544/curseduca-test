@@ -2,15 +2,19 @@ import { useState, useCallback, FormEvent } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { isEmailValid } from 'utils/isValidEmail';
-import { isPasswordValid } from 'utils/isPasswordValid';
-import { useErrors } from 'hooks/useErrors';
 import { HiMail, HiKey } from 'react-icons/hi';
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 
 import { Logo } from 'components/Logo';
 import { useRouter } from 'next/router';
-import { Container, Content, Form, InputContainer, Button } from './styles';
+import {
+  Container,
+  Content,
+  Form,
+  InputContainer,
+  Button,
+  MainContainer,
+} from './styles';
 
 export const Login = () => {
   const [inputActive, setInputActive] = useState('');
@@ -52,69 +56,71 @@ export const Login = () => {
   return (
     <Container>
       <Image src="/images/brushs.png" layout="fill" object-fit="cover" alt="" />
-      <header>
-        <Logo />
-      </header>
-      <Content>
-        <Form onSubmit={handleCreateAccout}>
-          <h2>Conecte-se</h2>
-          <span className="sub-title">
-            Entre agora na rede social Curseduca
-          </span>
+      <MainContainer>
+        <Content>
+          <header>
+            <Logo />
+          </header>
+          <Form onSubmit={handleCreateAccout}>
+            <h2>Conecte-se</h2>
+            <span className="sub-title">
+              Entre agora na rede social Curseduca
+            </span>
 
-          <div className="inputs-group">
-            <InputContainer isFocus={inputActive === 'email'}>
-              <div>
-                <div className="icon">
-                  <HiMail />
+            <div className="inputs-group">
+              <InputContainer isFocus={inputActive === 'email'}>
+                <div>
+                  <div className="icon">
+                    <HiMail />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Email"
+                    onFocus={() => setInputActive('email')}
+                    value={email}
+                    onChange={handleChangeEmail}
+                  />
                 </div>
-                <input
-                  type="text"
-                  placeholder="Email"
-                  onFocus={() => setInputActive('email')}
-                  value={email}
-                  onChange={handleChangeEmail}
-                />
-              </div>
-            </InputContainer>
-            <InputContainer isFocus={inputActive === 'password'}>
-              <div>
-                <div className="icon">
-                  <HiKey />
+              </InputContainer>
+              <InputContainer isFocus={inputActive === 'password'}>
+                <div>
+                  <div className="icon">
+                    <HiKey />
+                  </div>
+                  <input
+                    type={isPasswordVisible ? 'text' : 'password'}
+                    placeholder="Senha"
+                    onFocus={() => setInputActive('password')}
+                    value={password}
+                    onChange={handleChangePassword}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setIsPasswordVisible((prev) => !prev)}
+                    className="visibility-control"
+                  >
+                    <span>
+                      {isPasswordVisible ? (
+                        <AiOutlineEye />
+                      ) : (
+                        <AiOutlineEyeInvisible />
+                      )}
+                    </span>
+                  </button>
                 </div>
-                <input
-                  type={isPasswordVisible ? 'text' : 'password'}
-                  placeholder="Senha"
-                  onFocus={() => setInputActive('password')}
-                  value={password}
-                  onChange={handleChangePassword}
-                />
-                <button
-                  type="button"
-                  onClick={() => setIsPasswordVisible((prev) => !prev)}
-                  className="visibility-control"
-                >
-                  <span>
-                    {isPasswordVisible ? (
-                      <AiOutlineEye />
-                    ) : (
-                      <AiOutlineEyeInvisible />
-                    )}
-                  </span>
-                </button>
-              </div>
-            </InputContainer>
-          </div>
+              </InputContainer>
+            </div>
 
-          <Button type="submit" disabled={!isFormValid}>
-            Entrar na minha conta
-          </Button>
+            <Button type="submit" disabled={!isFormValid}>
+              Entrar na minha conta
+            </Button>
 
-          <span className="has-account">
-            Não tem uma conta? <Link href="/register">Registre-se agora</Link>
-          </span>
-        </Form>
-      </Content>
+            <span className="has-account">
+              Não tem uma conta? <Link href="/register">Registre-se agora</Link>
+            </span>
+          </Form>
+        </Content>
+      </MainContainer>
     </Container>
   );
 };

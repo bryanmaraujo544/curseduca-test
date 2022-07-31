@@ -4,7 +4,7 @@ export const Profile = () => {
   console.log('profile');
 
   return (
-    <Container>
+    <Container as="aside">
       <p>Profile</p>
     </Container>
   );

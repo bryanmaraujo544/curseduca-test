@@ -2,22 +2,36 @@
 import styled from 'styled-components';
 import { Layout } from 'components/Layout';
 
-export const Container = styled(Layout)`
+export const Container = styled.div`
   position: relative;
-  min-height: 100vh;
+  height: 100%;
   background-color: ${({ theme }) => theme.colors.yellow.dark};
+  display: flex;
+  align-items: center;
+`;
+
+export const MainContainer = styled(Layout)`
+  min-height: 100vh;
   height: 100%;
   width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   color: ${({ theme }) => theme.colors.white};
+
+  header {
+    display: flex;
+    justify-content: center;
+  }
 `;
 
 export const Content = styled.section`
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  gap: 6.4rem;
+  align-items: center;
+  gap: 2rem;
   flex: 1;
   width: 100%;
   height: 100%;

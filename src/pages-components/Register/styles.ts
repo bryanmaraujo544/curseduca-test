@@ -2,19 +2,22 @@
 import { Layout } from 'components/Layout';
 import styled from 'styled-components';
 
-export const Container = styled(Layout)`
+export const Container = styled.div`
   position: relative;
   min-height: 100vh;
   background-color: ${({ theme }) => theme.colors.yellow.dark};
+
+  header {
+    padding: 2.4rem 0;
+  }
+`;
+
+export const MainContainer = styled(Layout)`
   height: 100%;
   width: 100vw;
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.colors.white};
-
-  header {
-    padding: 2.4rem 0;
-  }
 `;
 
 export const Content = styled.section`

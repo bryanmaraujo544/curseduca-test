@@ -29,6 +29,7 @@ const GlobalStyle = createGlobalStyle`
     max-width: 100vw;
     overflow-x: hidden;
     color: ${({ theme }) => theme.colors.gray[900]};
+    background-color: ${({ theme }) => theme.colors.gray[100]}
   }
 
   body, input, textarea, select, button {
