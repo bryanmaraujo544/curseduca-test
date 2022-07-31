@@ -50,8 +50,8 @@ const MOCK_POSTS = [
   {
     id: 3323,
     author: {
-      id: 21,
-      name: 'Pereira Sousa',
+      id: 1,
+      name: 'Bryan Martins',
       profileImg: 'https://avatars.githubusercontent.com/u/62571814?v=4',
     },
     content:

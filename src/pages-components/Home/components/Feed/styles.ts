@@ -4,6 +4,22 @@ export const Container = styled.main`
   background: transparent;
   height: auto;
   overflow-y: scroll;
+  padding-right: 0.8rem;
+
+  ::-webkit-scrollbar {
+    width: 0.6rem;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.colors.gray[300]};
+    border-radius: 99rem;
+
+    &:hover {
+      background: ${({ theme }) => theme.colors.gray[400]};
+    }
+  }
 `;
 
 export const Posts = styled.section`

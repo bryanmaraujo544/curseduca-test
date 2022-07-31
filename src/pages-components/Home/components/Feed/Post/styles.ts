@@ -1,3 +1,4 @@
+import { Button } from 'components/Button';
 import { ContentBox } from 'components/ContentBox';
 import styled from 'styled-components';
 
@@ -27,8 +28,78 @@ export const PostHeader = styled.header`
   }
 `;
 
-export const PostContent = styled.div`
+export const PostMenuContainer = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-left: auto;
+
+  .menu-btn {
+    display: flex;
+    background: none;
+    border: 0;
+    font-size: 2rem;
+    height: 100%;
+    color: ${({ theme }) => theme.colors.gray[700]};
+  }
+
+  .options-container {
+    position: absolute;
+    bottom: 0rem;
+    transform: translateY(calc(100% + 0.8rem));
+    right: 0;
+    background: ${({ theme }) => theme.colors.gray[300]};
+    padding: 0.8rem;
+    border-radius: 1.2rem;
+    z-index: 20;
+    width: 15rem;
+
+    display: flex;
+    flex-direction: column;
+
+    button {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 0.8rem;
+      background: none;
+      width: 100%;
+      border: 0;
+      font-weight: 500;
+      color: ${({ theme }) => theme.colors.gray[800]};
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.8rem;
+      transition: background 0.2s;
+
+      &:hover {
+        background: ${({ theme }) => theme.colors.gray[400]};
+      }
+
+      &:focus {
+        background: ${({ theme }) => theme.colors.gray[400]};
+      }
+    }
+  }
+`;
+
+export const PostContent = styled.div<{ isToEdit: boolean }>`
   margin-top: 1.6rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: ${({ isToEdit }) => (isToEdit ? 'flex-end' : 'center')};
+
+  textarea {
+    width: 100%;
+    background: ${({ theme }) => theme.colors.gray[100]};
+    padding: 0.8rem;
+    resize: vertical;
+    height: 6.4rem;
+    min-height: 5.6rem;
+    max-height: 9.6rem;
+    color: ${({ theme }) => theme.colors.gray[700]};
+    border-radius: 1.2rem;
+  }
 
   .content-img {
     position: relative;
@@ -142,4 +213,10 @@ export const Comment = styled.div`
       word-break: break-word;
     }
   }
+`;
+
+export const EditBtn = styled(Button)`
+  font-size: 1.4rem;
+  height: 3.6rem;
+  margin-top: 0.8rem;
 `;
