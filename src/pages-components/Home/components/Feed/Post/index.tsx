@@ -1,4 +1,11 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  Dispatch,
+  SetStateAction,
+} from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { AiFillHeart, AiOutlineHeart, AiOutlineSend } from 'react-icons/ai';
@@ -46,14 +53,21 @@ interface PostProps {
         }[]
       | [];
   };
+  setIsDeletePostModalOpen: Dispatch<SetStateAction<boolean>>;
+  setPostIdToDelete: Dispatch<SetStateAction<number>>;
 }
 
-export const Post = ({ postInfos: post }: PostProps) => {
+export const Post = ({
+  postInfos: post,
+  setIsDeletePostModalOpen,
+  setPostIdToDelete,
+}: PostProps) => {
   const [commentContent, setCommentContent] = useState('');
   const [isLiked, setIsLiked] = useState(false);
   const [seeAllComments, setSeeAllComments] = useState(false);
 
   const [isPostMenuOpen, setIsPostMenuOpen] = useState(false);
+
   const [isToEditPostContent, setIsToEditPostContent] = useState(false);
   const [newPostContent, setNewPostContent] = useState('');
 
@@ -100,6 +114,11 @@ export const Post = ({ postInfos: post }: PostProps) => {
     } catch {}
   }, [newPostContent, user]);
 
+  const handleOpenDeleteModal = useCallback(() => {
+    setIsDeletePostModalOpen(true);
+    setPostIdToDelete(post.id);
+  }, [post]);
+
   const isMyPost = user?.id === post.author.id;
 
   return (
@@ -139,7 +158,7 @@ export const Post = ({ postInfos: post }: PostProps) => {
                 <BsPencil className="icon" />
                 Editar
               </button>
-              <button type="button">
+              <button type="button" onClick={handleOpenDeleteModal}>
                 <BsTrash className="icon" />
                 Deletar
               </button>

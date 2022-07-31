@@ -1,4 +1,7 @@
+import { Modal } from 'components/Modal';
+import { useState } from 'react';
 import { CreatePostBox } from './CreatePostBox';
+import { DeletePostModal } from './DeletePostModal';
 import { Post } from './Post';
 import { Container, Posts } from './styles';
 
@@ -69,16 +72,29 @@ const MOCK_POSTS = [
 ];
 
 export const Feed = () => {
-  console.log('feed');
+  const [isDeletePostModalOpen, setIsDeletePostModalOpen] = useState(false);
+  const [postIdToDelete, setPostIdToDelete] = useState(-1);
 
   return (
-    <Container>
-      <CreatePostBox />
-      <Posts>
-        {MOCK_POSTS.map((post) => (
-          <Post postInfos={post} key={post.id} />
-        ))}
-      </Posts>
-    </Container>
+    <>
+      <Container>
+        <CreatePostBox />
+        <Posts>
+          {MOCK_POSTS.map((post) => (
+            <Post
+              postInfos={post}
+              key={post.id}
+              setIsDeletePostModalOpen={setIsDeletePostModalOpen}
+              setPostIdToDelete={setPostIdToDelete}
+            />
+          ))}
+        </Posts>
+      </Container>
+      <DeletePostModal
+        isDeletePostModalOpen={isDeletePostModalOpen}
+        setIsDeletePostModalOpen={setIsDeletePostModalOpen}
+        postIdToDelete={postIdToDelete}
+      />
+    </>
   );
 };
