@@ -1,5 +1,4 @@
 import {
-  useEffect,
   useState,
   useRef,
   useCallback,
@@ -23,6 +22,7 @@ import { PostsContext } from 'pages-components/Home';
 import { toast } from 'utils/toast';
 import { Button } from 'components/Button';
 import CommentsService from 'services/CommentsService';
+import LikesService from 'services/LikesService';
 import {
   Container,
   PostHeader,
@@ -50,12 +50,15 @@ export interface PostProps {
     | {
         id: number;
         authorId: number;
+        postId: number;
       }[]
     | [];
   comments:
     | {
         id: number;
         author: Author;
+        postId: number;
+        authorId: number;
         content: string;
       }[]
     | [];
@@ -72,7 +75,6 @@ export const Post = ({
   setPostIdToDelete,
 }: Props) => {
   const [commentContent, setCommentContent] = useState('');
-  const [isLiked, setIsLiked] = useState(false);
   const [seeAllComments, setSeeAllComments] = useState(false);
 
   const [isPostMenuOpen, setIsPostMenuOpen] = useState(false);
@@ -80,6 +82,7 @@ export const Post = ({
   const [isToEditPostContent, setIsToEditPostContent] = useState(false);
   const [newPostContent, setNewPostContent] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const [isLiking, setIsLiking] = useState(false);
 
   const [isCommenting, setIsCommenting] = useState(false);
 
@@ -87,11 +90,7 @@ export const Post = ({
   const commentInputRef = useRef<HTMLInputElement>(null);
   const { setAllPosts } = useContext(PostsContext);
 
-  useEffect(() => {
-    if (post.likes.some(({ authorId }) => authorId === 1)) {
-      setIsLiked(true);
-    }
-  }, [post]);
+  const isLiked = post.likes.some((like) => like.authorId === user.id);
 
   const handleCommentOnPost = useCallback(
     async (e: FormEvent) => {
@@ -145,19 +144,59 @@ export const Post = ({
     [commentContent, post]
   );
 
-  const handleLikePost = useCallback(() => {
+  const handleLikePost = useCallback(async () => {
     try {
-      setIsLiked(true);
-      // Save in back-end
-    } catch {}
-  }, []);
+      setIsLiking(true);
 
-  const handleUnlikePost = useCallback(() => {
-    try {
-      setIsLiked(false);
+      const { like } = await LikesService.create({ postId: post.id });
+
+      setAllPosts((prev) =>
+        prev.map((postToUpdate) => {
+          if (postToUpdate.id === post.id) {
+            return {
+              ...postToUpdate,
+              likes: [...postToUpdate.likes, like],
+            };
+          }
+          return postToUpdate;
+        })
+      );
+
+      setIsLiking(false);
+
       // Save in back-end
-    } catch {}
-  }, []);
+    } catch {
+      setIsLiking(false);
+    }
+  }, [post, user]);
+
+  const handleUnlikePost = useCallback(async () => {
+    try {
+      setIsLiking(true);
+
+      await LikesService.delete({ postId: post.id });
+
+      setAllPosts((prev) =>
+        prev.map((postToUpdate) => {
+          if (postToUpdate.id === post.id) {
+            const newLikes = postToUpdate.likes.filter(
+              (like) => like.authorId !== user.id
+            );
+            return {
+              ...postToUpdate,
+              likes: newLikes,
+            };
+          }
+          return postToUpdate;
+        })
+      );
+
+      setIsLiking(false);
+      // Save in back-end
+    } catch {
+      setIsLiking(false);
+    }
+  }, [post, user]);
 
   const handleBeginPostUpdate = useCallback(() => {
     setIsToEditPostContent(true);
@@ -201,39 +240,36 @@ export const Post = ({
   const handleOpenDeleteModal = useCallback(() => {
     setIsDeletePostModalOpen(true);
     setPostIdToDelete(post.id);
-  }, [post]);
+  }, []);
 
-  const handleDeleteComment = useCallback(
-    async (commentId: number) => {
-      try {
-        setAllPosts((prev) =>
-          prev.map((postToUpdate) => {
-            if (postToUpdate.id === post.id) {
-              const filteredComments = postToUpdate.comments.filter(
-                (comment) => comment.id !== commentId
-              );
+  const handleDeleteComment = useCallback(async (commentId: number) => {
+    try {
+      setAllPosts((prev) =>
+        prev.map((postToUpdate) => {
+          if (postToUpdate.id === post.id) {
+            const filteredComments = postToUpdate.comments.filter(
+              (comment) => comment.id !== commentId
+            );
 
-              return { ...postToUpdate, comments: filteredComments };
-            }
-            return postToUpdate;
-          })
-        );
-        toast({
-          status: 'success',
-          duration: 2000,
-          text: 'Comentário deletado.',
-        });
-        await CommentsService.delete(commentId);
-      } catch {
-        toast({
-          status: 'error',
-          duration: 2000,
-          text: 'Erro ao delete comentário.',
-        });
-      }
-    },
-    [post]
-  );
+            return { ...postToUpdate, comments: filteredComments };
+          }
+          return postToUpdate;
+        })
+      );
+      toast({
+        status: 'success',
+        duration: 2000,
+        text: 'Comentário deletado.',
+      });
+      await CommentsService.delete(commentId);
+    } catch {
+      toast({
+        status: 'error',
+        duration: 2000,
+        text: 'Erro ao delete comentário.',
+      });
+    }
+  }, []);
 
   const isMyPost = user?.id === post?.author?.id;
 
@@ -326,10 +362,12 @@ export const Post = ({
       </PostContent>
 
       <PostActions>
-        <button
+        <Button
           type="button"
           className="like-btn"
           onClick={() => (isLiked ? handleUnlikePost() : handleLikePost())}
+          variant="ghost"
+          disabled={isLiking}
         >
           <AiOutlineHeart
             style={{ opacity: !isLiked ? '1' : '0' }}
@@ -339,8 +377,8 @@ export const Post = ({
             style={{ opacity: isLiked ? '1' : '0' }}
             className="icon liked"
           />
-        </button>
-
+        </Button>
+        <span>{post.likes.length} likes</span>
         <button type="button" onClick={() => commentInputRef?.current?.focus()}>
           <TbMessageCircle2 className="icon" />
         </button>

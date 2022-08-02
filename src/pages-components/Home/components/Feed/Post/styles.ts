@@ -144,6 +144,14 @@ export const PostActions = styled.div`
       }
     }
   }
+
+  .like-btn {
+    padding: 0 !important;
+  }
+
+  span {
+    margin-right: 0.4rem;
+  }
 `;
 
 export const UserActions = styled.footer`
