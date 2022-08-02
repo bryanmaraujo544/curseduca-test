@@ -2,7 +2,8 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { BsImage } from 'react-icons/bs';
 import { ProfileImgBox } from 'components/ProfileImgBox';
-import { Container, CreatePostBtn, MainContainer } from './styles';
+import { Button } from 'components/Button';
+import { Container, MainContainer } from './styles';
 
 export const CreatePostBox = () => {
   const [content, setContent] = useState('');
@@ -28,7 +29,9 @@ export const CreatePostBox = () => {
             <BsImage className="icon" />
             Imagem
           </button>
-          <CreatePostBtn>Enviar</CreatePostBtn>
+          <Button type="submit" className="create-post-btn">
+            Enviar
+          </Button>
         </div>
       </MainContainer>
     </Container>

@@ -12,12 +12,13 @@ import { HiMail, HiUserCircle, HiKey } from 'react-icons/hi';
 import { serverApi } from 'services/serverApi';
 import { useRouter } from 'next/router';
 import { toast } from 'utils/toast';
+import { Button } from 'components/Button';
 import {
   Container,
   Content,
   Form,
   InputContainer,
-  Button,
+  // Button,
   MainContainer,
 } from './styles';
 
@@ -29,6 +30,8 @@ export const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isTermsAgreed, setIsTermsAgreed] = useState(false);
+
+  const [isRegistering, setIsRegistering] = useState(false);
 
   const { setError, removeError, getErrorMessageByFieldName, errors } =
     useErrors();
@@ -69,9 +72,10 @@ export const Register = () => {
         }
 
         if (isFormValid) {
-          // TODO: make the api call to create account
+          setIsRegistering(true);
 
           await serverApi.post('/users', { name, email, password });
+
           toast({
             status: 'success',
             text: 'Usuário registrado',
@@ -80,6 +84,7 @@ export const Register = () => {
           router.push('/');
         }
       } catch {
+        setIsRegistering(false);
         toast({
           status: 'error',
           text: 'Algo ocorreu errado. Verifique as informações',
@@ -87,7 +92,8 @@ export const Register = () => {
         });
       }
     },
-    [name, email, password, isTermsAgreed]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [name, email, password, isTermsAgreed, isFormValid]
   );
 
   const handleChangeName = useCallback((e: any) => {
@@ -249,7 +255,12 @@ export const Register = () => {
               </label>
             </div>
 
-            <Button type="submit" disabled={!isFormValid}>
+            <Button
+              type="submit"
+              disabled={!isFormValid || isRegistering}
+              className="submit-btn"
+              isLoading={isRegistering}
+            >
               Criar minha conta
             </Button>
 

@@ -58,6 +58,11 @@ export const Form = styled.form`
 
   margin-bottom: 2.4rem;
 
+  .submit-btn {
+    height: 5.6rem;
+    margin-top: 1.6rem;
+  }
+
   h2 {
     font-size: 3.2rem;
   }
@@ -170,20 +175,5 @@ export const InputContainer = styled.div<{
     font-size: 1.2rem;
     color: ${({ theme }) => theme.colors.red.main};
     margin-top: 0.4rem;
-  }
-`;
-
-export const Button = styled.button`
-  border: 0;
-  margin-top: 1.6rem;
-  height: 5.6rem;
-  background: ${({ theme }) => theme.colors.yellow.main};
-  color: ${({ theme }) => theme.colors.black};
-  border-radius: 1.2rem;
-  font-weight: 600;
-  transition: filter 0.2s;
-
-  &:not(:disabled)&:hover {
-    filter: brightness(0.8);
   }
 `;

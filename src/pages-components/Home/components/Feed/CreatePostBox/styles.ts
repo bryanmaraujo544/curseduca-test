@@ -1,4 +1,3 @@
-import { Button } from 'components/Button';
 import { ContentBox } from 'components/ContentBox';
 import styled from 'styled-components';
 
@@ -7,8 +6,13 @@ export const Container = styled(ContentBox)`
   gap: 1.6rem;
 `;
 
-export const MainContainer = styled.div`
+export const MainContainer = styled.form`
   flex: 1;
+
+  .create-post-btn {
+    height: 3.6rem;
+    padding: 0 2.4rem;
+  }
 
   textarea {
     text-align: left;
@@ -54,9 +58,4 @@ export const MainContainer = styled.div`
       }
     }
   }
-`;
-
-export const CreatePostBtn = styled(Button)`
-  height: 3.6rem;
-  padding: 0 2.4rem;
 `;

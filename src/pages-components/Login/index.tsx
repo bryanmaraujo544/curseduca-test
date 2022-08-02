@@ -10,12 +10,12 @@ import { Logo } from 'components/Logo';
 import { useRouter } from 'next/router';
 import { serverApi } from 'services/serverApi';
 import { toast } from 'utils/toast';
+import { Button } from 'components/Button';
 import {
   Container,
   Content,
   Form,
   InputContainer,
-  Button,
   MainContainer,
 } from './styles';
 
@@ -26,6 +26,8 @@ export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [isLogging, setIsLogging] = useState(false);
+
   const router = useRouter();
   const isFormValid = email && password;
 
@@ -35,10 +37,12 @@ export const Login = () => {
 
       try {
         if (isFormValid) {
-          // TODO: make the api call to login in account
+          setIsLogging(true);
+
           const {
             data: { token },
           } = await serverApi.post('/auth/login', { email, password });
+
           toast({
             status: 'success',
             text: 'Você está conectado!',
@@ -50,6 +54,7 @@ export const Login = () => {
           router.push('/');
         }
       } catch {
+        setIsLogging(false);
         toast({
           status: 'error',
           text: 'Algo ocorreu errado. Verifique as informações',
@@ -127,7 +132,12 @@ export const Login = () => {
               </InputContainer>
             </div>
 
-            <Button type="submit" disabled={!isFormValid}>
+            <Button
+              type="submit"
+              disabled={!isFormValid}
+              isLoading={isLogging}
+              className="login-btn"
+            >
               Entrar na minha conta
             </Button>
 

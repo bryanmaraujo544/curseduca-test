@@ -51,7 +51,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   [disabled] {
-    filter: brightness(0.7);
+    filter: brightness(0.8);
     cursor: not-allowed;
   }
 `;
