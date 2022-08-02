@@ -49,6 +49,7 @@ export const Container = styled.button<{ variant: 'primary' | 'ghost' }>`
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0.4rem;
   border: 0;
   padding: 0.4rem 1.2rem;
   background: ${({ theme }) => theme.colors.yellow.main};

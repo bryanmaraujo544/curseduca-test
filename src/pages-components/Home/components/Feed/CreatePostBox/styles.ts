@@ -39,23 +39,5 @@ export const MainContainer = styled.form`
     align-items: center;
     justify-content: space-between;
     margin-top: 0.8rem;
-
-    .action-box {
-      border: 0;
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      color: ${({ theme }) => theme.colors.gray[600]};
-      font-weight: 500;
-      background: ${({ theme }) => theme.colors.gray[100]};
-      padding: 0.8rem 1.2rem;
-      border-radius: 1.2rem;
-      font-size: 1.6rem;
-      transition: background 0.2s;
-
-      &:hover {
-        background: ${({ theme }) => theme.colors.gray[300]};
-      }
-    }
   }
 `;

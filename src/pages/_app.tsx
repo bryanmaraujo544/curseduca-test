@@ -27,7 +27,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <UserContextProvider>
       <CustomThemeProvider colorMode={colorMode} setColorMode={setColorMode}>
-        <ThemeProvider theme={theme.light}>
+        <ThemeProvider theme={theme[colorMode]}>
           <Component {...pageProps} />
           <GlobalStyle />
           <ToastContainer />

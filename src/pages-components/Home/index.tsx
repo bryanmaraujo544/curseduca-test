@@ -12,7 +12,6 @@ import { serverApi } from 'services/serverApi';
 import { Feed } from './components/Feed';
 import { PostProps } from './components/Feed/Post';
 import { Header } from './components/Header';
-import { Profile } from './components/Profile';
 import { Container } from './styles';
 
 interface PostsContextProps {
@@ -44,7 +43,6 @@ export const Home = ({ posts }: { posts: PostProps[] }) => {
       <PostsContext.Provider value={contextValues}>
         <Header />
         <div className="main-container">
-          <Profile />
           <Feed posts={allPosts} />
         </div>
       </PostsContext.Provider>

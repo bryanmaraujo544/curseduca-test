@@ -29,17 +29,17 @@ export const UserContext = createContext({} as UserContextProps);
 
 export const UserContextProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState({} as User);
-  const cookies = parseCookies();
 
-  const userToken = jwt.decode(cookies.token) as { id: string };
   const router = useRouter();
+  const cookies = parseCookies();
+  const userToken = jwt.decode(cookies.token) as { id: string };
 
   useEffect(() => {
     (async () => {
       const { data } = await serverApi.get(`/users/${userToken?.id}`);
       setUser(data.user);
     })();
-  }, [userToken]);
+  }, []);
 
   const handleLogout = useCallback(() => {
     setUser({} as User);

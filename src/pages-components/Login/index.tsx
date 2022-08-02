@@ -2,6 +2,7 @@ import { useState, useCallback, FormEvent } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import nookies from 'nookies';
+import jwt from 'jsonwebtoken';
 
 import { HiMail, HiKey } from 'react-icons/hi';
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
@@ -11,6 +12,7 @@ import { useRouter } from 'next/router';
 import { serverApi } from 'services/serverApi';
 import { toast } from 'utils/toast';
 import { Button } from 'components/Button';
+import { useUser } from 'hooks/useUser';
 import {
   Container,
   Content,
@@ -28,6 +30,7 @@ export const Login = () => {
 
   const [isLogging, setIsLogging] = useState(false);
 
+  const { setUser } = useUser();
   const router = useRouter();
   const isFormValid = email && password;
 
@@ -51,6 +54,11 @@ export const Login = () => {
           nookies.set(null, 'token', token, {
             maxAge: 60 * 60 * 24 * 30, // 30 days,
           });
+
+          const userToken = jwt.decode(token) as { id: string };
+
+          const { data } = await serverApi.get(`/users/${userToken?.id}`);
+          setUser(data.user);
           router.push('/');
         }
       } catch {

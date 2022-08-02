@@ -1,6 +1,5 @@
 import { FormEvent, useContext, useState } from 'react';
 import Image from 'next/image';
-import { BsImage } from 'react-icons/bs';
 import { ProfileImgBox } from 'components/ProfileImgBox';
 import { Button } from 'components/Button';
 import { toast } from 'utils/toast';
@@ -21,6 +20,10 @@ export const CreatePostBox = () => {
     try {
       if (!content) {
         toast({ status: 'error', duration: 1000, text: 'Digite algo.' });
+        return;
+      }
+
+      if (isCreating) {
         return;
       }
 
@@ -61,10 +64,6 @@ export const CreatePostBox = () => {
           onChange={(e) => setContent(e.target.value)}
         />
         <div className="bottom-actions">
-          <button type="button" className="action-box">
-            <BsImage className="icon" />
-            Imagem
-          </button>
           <Button
             type="submit"
             className="create-post-btn"

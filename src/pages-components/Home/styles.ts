@@ -9,8 +9,9 @@ export const Container = styled(Layout)`
   height: 100vh;
 
   .main-container {
-    display: grid;
-    grid-template-columns: 25rem 1fr 25rem;
+    display: flex;
+    justify-content: center;
+    width: 100%;
     height: 100%;
     overflow: hidden;
     gap: 2rem;
