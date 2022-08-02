@@ -32,27 +32,29 @@ interface Author {
   name: string;
   profileImg: string;
 }
-interface PostProps {
-  postInfos: {
-    id: number;
-    content: string;
-    imageUrl: string;
-    createdAt: string;
-    author: Author;
-    likes:
-      | {
-          id: number;
-          authorId: number;
-        }[]
-      | [];
-    comments:
-      | {
-          id: number;
-          author: Author;
-          content: string;
-        }[]
-      | [];
-  };
+
+export interface PostProps {
+  id: number;
+  content: string;
+  imageUrl: string;
+  createdAt: string;
+  author: Author;
+  likes:
+    | {
+        id: number;
+        authorId: number;
+      }[]
+    | [];
+  comments:
+    | {
+        id: number;
+        author: Author;
+        content: string;
+      }[]
+    | [];
+}
+export interface Props {
+  postInfos: PostProps;
   setIsDeletePostModalOpen: Dispatch<SetStateAction<boolean>>;
   setPostIdToDelete: Dispatch<SetStateAction<number>>;
 }
@@ -61,7 +63,7 @@ export const Post = ({
   postInfos: post,
   setIsDeletePostModalOpen,
   setPostIdToDelete,
-}: PostProps) => {
+}: Props) => {
   const [commentContent, setCommentContent] = useState('');
   const [isLiked, setIsLiked] = useState(false);
   const [seeAllComments, setSeeAllComments] = useState(false);
@@ -119,17 +121,22 @@ export const Post = ({
     setPostIdToDelete(post.id);
   }, [post]);
 
-  const isMyPost = user?.id === post.author.id;
+  const isMyPost = user?.id === post?.author?.id;
+
+  console.log({ post });
 
   return (
     <Container>
       <PostHeader>
         <ProfileImgBox>
           <Image
-            src={post.author.profileImg}
+            src={
+              post?.author?.profileImg ||
+              'https://avatars.githubusercontent.com/u/62571814?v=4'
+            }
             layout="fill"
             objectFit="cover"
-            alt={`${post.author.name}-profile-image`}
+            alt={`${post?.author?.name}-profile-image`}
           />
         </ProfileImgBox>
 
@@ -219,7 +226,10 @@ export const Post = ({
       <UserActions>
         <ProfileImgBox>
           <Image
-            src={post.author.profileImg}
+            src={
+              post?.author?.profileImg ||
+              'https://avatars.githubusercontent.com/u/62571814?v=4'
+            }
             layout="fill"
             objectFit="cover"
             alt="your-profile-image"

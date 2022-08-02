@@ -1,8 +1,7 @@
-import { Modal } from 'components/Modal';
 import { useState } from 'react';
 import { CreatePostBox } from './CreatePostBox';
 import { DeletePostModal } from './DeletePostModal';
-import { Post } from './Post';
+import { Post, PostProps } from './Post';
 import { Container, Posts } from './styles';
 
 const MOCK_POSTS = [
@@ -71,7 +70,7 @@ const MOCK_POSTS = [
   },
 ];
 
-export const Feed = () => {
+export const Feed = ({ posts }: { posts: PostProps[] }) => {
   const [isDeletePostModalOpen, setIsDeletePostModalOpen] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState(-1);
 
@@ -80,7 +79,7 @@ export const Feed = () => {
       <Container>
         <CreatePostBox />
         <Posts>
-          {MOCK_POSTS.map((post) => (
+          {posts.map((post) => (
             <Post
               postInfos={post}
               key={post.id}

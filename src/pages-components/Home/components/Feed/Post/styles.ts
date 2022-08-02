@@ -83,11 +83,11 @@ export const PostMenuContainer = styled.div`
 `;
 
 export const PostContent = styled.div<{ isToEdit: boolean }>`
-  margin-top: 1.6rem;
+  margin-top: 2rem;
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: ${({ isToEdit }) => (isToEdit ? 'flex-end' : 'center')};
+  align-items: ${({ isToEdit }) => (isToEdit ? 'flex-end' : 'flex-start')};
 
   textarea {
     width: 100%;
@@ -114,7 +114,7 @@ export const PostContent = styled.div<{ isToEdit: boolean }>`
 export const PostActions = styled.div`
   display: flex;
   justify-content: flex-start;
-  margin-top: 1.6rem;
+  margin-top: 2rem;
   gap: 1.2rem;
 
   button {

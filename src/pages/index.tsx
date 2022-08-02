@@ -1,9 +1,14 @@
-import type { GetServerSideProps, NextPage } from 'next';
+/* eslint-disable dot-notation */
+import type { GetServerSideProps } from 'next';
 import { Home as HomeComponent } from 'pages-components/Home';
 import { serverApi } from 'services/serverApi';
 import nookies from 'nookies';
+import PostService from 'services/PostService';
+import { PostProps } from 'pages-components/Home/components/Feed/Post';
 
-const Home: NextPage = () => <HomeComponent />;
+const Home = ({ posts }: { posts: PostProps[] }) => (
+  <HomeComponent posts={posts} />
+);
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { token } = nookies.get(ctx);
@@ -19,11 +24,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       }
     );
 
-    serverApi.defaults.headers.Authorization = `Bearer ${token}`;
+    serverApi.defaults.headers['Authorization'] = `Bearer ${token}`;
+
+    const posts = await PostService.getAll();
 
     return {
       props: {
-        user: null,
+        posts,
       },
     };
   } catch (err: any) {
