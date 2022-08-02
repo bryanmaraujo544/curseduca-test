@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-return */
-import { useState, useCallback, FormEvent } from 'react';
+import { useState, useCallback, FormEvent, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -9,6 +9,10 @@ import { isPasswordValid } from 'utils/isPasswordValid';
 import { useErrors } from 'hooks/useErrors';
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 import { HiMail, HiUserCircle, HiKey } from 'react-icons/hi';
+import { serverApi } from 'services/serverApi';
+import { useRouter } from 'next/router';
+import { Toaster } from 'components/Toast';
+import { toast } from 'utils/toast';
 import {
   Container,
   Content,
@@ -32,9 +36,15 @@ export const Register = () => {
 
   const isFormValid =
     name && isEmailValid(email) && isPasswordValid(password) && isTermsAgreed;
+  const router = useRouter();
+
+  // useEffect(() => {
+  //   const toaster = Toaster;
+  //   toaster();
+  // }, []);
 
   const handleCreateAccout = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
       e.preventDefault();
 
       try {
@@ -57,11 +67,10 @@ export const Register = () => {
 
         if (isFormValid) {
           // TODO: make the api call to create account
-          console.log({
-            name,
-            email,
-            password,
-          });
+
+          toast({ status: 'default', text: 'Register toast', duration: 3000 });
+          // await serverApi.post('/users', { name, email, password });
+          // router.push('/');
         }
       } catch {}
     },

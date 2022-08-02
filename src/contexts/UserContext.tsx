@@ -3,10 +3,15 @@ import {
   Dispatch,
   ReactNode,
   SetStateAction,
+  useCallback,
   useEffect,
   useMemo,
   useState,
 } from 'react';
+import { serverApi } from 'services/serverApi';
+import jwt from 'jsonwebtoken';
+import { destroyCookie, parseCookies } from 'nookies';
+import { useRouter } from 'next/router';
 
 interface User {
   id: number;
@@ -17,22 +22,35 @@ interface User {
 interface UserContextProps {
   user: User;
   setUser: Dispatch<SetStateAction<User>>;
+  handleLogout: () => void;
 }
 
 export const UserContext = createContext({} as UserContextProps);
 
 export const UserContextProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState({} as User);
+  const cookies = parseCookies();
+
+  const userToken = jwt.decode(cookies.token) as { id: string };
+  const router = useRouter();
 
   useEffect(() => {
-    setUser({
-      id: 1,
-      name: 'Bryan Martins',
-      profileImg: 'https://github.com/bryanmaraujo544.png',
-    });
+    (async () => {
+      const { data } = await serverApi.get(`/users/${userToken?.id}`);
+      setUser(data.user);
+    })();
   }, []);
 
-  const contextValues = useMemo(() => ({ user, setUser }), [user]);
+  const handleLogout = useCallback(() => {
+    setUser({} as User);
+    destroyCookie(null, 'token');
+    router.push('/login');
+  }, []);
+
+  const contextValues = useMemo(
+    () => ({ user, setUser, handleLogout }),
+    [user]
+  );
 
   return (
     <UserContext.Provider value={contextValues}>

@@ -7,6 +7,7 @@ import GlobalStyle from 'styles/global';
 import theme from 'styles/theme';
 import { CustomThemeProvider } from 'contexts/CustomThemeContext';
 import { UserContextProvider } from 'contexts/UserContext';
+import { ToastContainer } from 'components/Toast/ToastContainer';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [colorMode, setColorMode] = useState(() => {
@@ -22,12 +23,14 @@ function MyApp({ Component, pageProps }: AppProps) {
       return 'light';
     }
   });
+
   return (
     <UserContextProvider>
       <CustomThemeProvider colorMode={colorMode} setColorMode={setColorMode}>
         <ThemeProvider theme={theme.light}>
           <Component {...pageProps} />
           <GlobalStyle />
+          <ToastContainer />
         </ThemeProvider>
       </CustomThemeProvider>
     </UserContextProvider>

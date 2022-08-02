@@ -1,12 +1,14 @@
 import { useState, useCallback, FormEvent } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import nookies from 'nookies';
 
 import { HiMail, HiKey } from 'react-icons/hi';
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 
 import { Logo } from 'components/Logo';
 import { useRouter } from 'next/router';
+import { serverApi } from 'services/serverApi';
 import {
   Container,
   Content,
@@ -26,18 +28,20 @@ export const Login = () => {
   const router = useRouter();
   const isFormValid = email && password;
 
-  const handleCreateAccout = useCallback(
-    (e: FormEvent) => {
+  const handleLogin = useCallback(
+    async (e: FormEvent) => {
       e.preventDefault();
 
       try {
         if (isFormValid) {
           // TODO: make the api call to login in account
-          router.push('/');
-          console.log({
-            email,
-            password,
+          const {
+            data: { token },
+          } = await serverApi.post('/auth/login', { email, password });
+          nookies.set(null, 'token', token, {
+            maxAge: 60 * 60 * 24 * 30, // 30 days,
           });
+          router.push('/');
         }
       } catch {}
     },
@@ -61,7 +65,7 @@ export const Login = () => {
           <header>
             <Logo />
           </header>
-          <Form onSubmit={handleCreateAccout}>
+          <Form onSubmit={handleLogin}>
             <h2>Conecte-se</h2>
             <span className="sub-title">
               Entre agora na rede social Curseduca
