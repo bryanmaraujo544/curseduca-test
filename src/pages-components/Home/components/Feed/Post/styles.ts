@@ -89,6 +89,13 @@ export const PostContent = styled.div<{ isToEdit: boolean }>`
   flex-direction: column;
   align-items: ${({ isToEdit }) => (isToEdit ? 'flex-end' : 'flex-start')};
 
+  .submit-edit-btn {
+    font-size: 1.4rem;
+    height: 3.6rem;
+    margin-top: 0.8rem;
+    width: 12.5rem;
+  }
+
   textarea {
     width: 100%;
     background: ${({ theme }) => theme.colors.gray[100]};
@@ -213,10 +220,4 @@ export const Comment = styled.div`
       word-break: break-word;
     }
   }
-`;
-
-export const EditBtn = styled(Button)`
-  font-size: 1.4rem;
-  height: 3.6rem;
-  margin-top: 0.8rem;
 `;

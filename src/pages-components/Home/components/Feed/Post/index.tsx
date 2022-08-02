@@ -5,6 +5,7 @@ import {
   useCallback,
   Dispatch,
   SetStateAction,
+  useContext,
 } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -15,6 +16,10 @@ import { IoOptions } from 'react-icons/io5';
 
 import { ProfileImgBox } from 'components/ProfileImgBox';
 import { useUser } from 'hooks/useUser';
+import PostService from 'services/PostService';
+import { PostsContext } from 'pages-components/Home';
+import { toast } from 'utils/toast';
+import { Button } from 'components/Button';
 import {
   Container,
   PostHeader,
@@ -24,7 +29,6 @@ import {
   Comments,
   Comment,
   PostMenuContainer,
-  EditBtn,
 } from './styles';
 
 interface Author {
@@ -72,9 +76,11 @@ export const Post = ({
 
   const [isToEditPostContent, setIsToEditPostContent] = useState(false);
   const [newPostContent, setNewPostContent] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
 
   const { user } = useUser();
   const commentInputRef = useRef<HTMLInputElement>(null);
+  const { setAllPosts } = useContext(PostsContext);
 
   useEffect(() => {
     if (post.likes.some(({ authorId }) => authorId === 1)) {
@@ -109,11 +115,37 @@ export const Post = ({
     setNewPostContent(post.content);
   }, []);
 
-  const handleEditPost = useCallback(() => {
+  const handleEditPost = useCallback(async () => {
     try {
+      setIsEditing(true);
+
+      const data = await PostService.update({
+        postId: post.id,
+        content: newPostContent,
+      });
+
+      setAllPosts((prev) =>
+        prev.map((postToUpdate) => {
+          if (postToUpdate.id === post.id) {
+            return data.post;
+          }
+          return postToUpdate;
+        })
+      );
+
+      toast({ status: 'success', duration: 2000, text: 'Post atualizado.' });
+
       setIsToEditPostContent(false);
+      setIsEditing(false);
       setNewPostContent('');
-    } catch {}
+    } catch {
+      setIsEditing(false);
+      toast({
+        status: 'error',
+        duration: 4000,
+        text: 'Algo deu errado. Tente novamente',
+      });
+    }
   }, [newPostContent, user]);
 
   const handleOpenDeleteModal = useCallback(() => {
@@ -122,8 +154,6 @@ export const Post = ({
   }, [post]);
 
   const isMyPost = user?.id === post?.author?.id;
-
-  console.log({ post });
 
   return (
     <Container>
@@ -181,9 +211,15 @@ export const Post = ({
               value={newPostContent}
               onChange={(e) => setNewPostContent(e.target.value)}
             />
-            <EditBtn type="button" onClick={() => handleEditPost()}>
+            <Button
+              type="button"
+              className="submit-edit-btn"
+              isLoading={isEditing}
+              disabled={isEditing}
+              onClick={() => handleEditPost()}
+            >
               Confirmar
-            </EditBtn>
+            </Button>
           </>
         ) : (
           <p className="content-text">{post.content}</p>
