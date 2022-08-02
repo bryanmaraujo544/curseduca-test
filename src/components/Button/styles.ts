@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 
 const load = keyframes`
   0% {
@@ -34,7 +34,18 @@ const round = keyframes`
   }
 `;
 
-export const Container = styled.button`
+const containerVariants = {
+  ghost: css`
+    background: transparent;
+    color: ${({ theme }) => theme.colors.black};
+  `,
+  primary: css`
+    background: ${({ theme }) => theme.colors.yellow.main};
+    color: #000;
+  `,
+};
+
+export const Container = styled.button<{ variant: 'primary' | 'ghost' }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,6 +57,8 @@ export const Container = styled.button`
   font-weight: 600;
   transition: filter 0.2s;
   position: relative;
+
+  ${({ variant }) => containerVariants[variant]}
 
   &:not(:disabled)&:hover {
     filter: brightness(0.8);

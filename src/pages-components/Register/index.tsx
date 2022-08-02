@@ -81,7 +81,7 @@ export const Register = () => {
             text: 'Usuário registrado',
             duration: 2000,
           });
-          router.push('/');
+          router.push('/login');
         }
       } catch {
         setIsRegistering(false);

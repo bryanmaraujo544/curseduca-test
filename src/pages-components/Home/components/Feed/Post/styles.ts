@@ -163,21 +163,6 @@ export const UserActions = styled.footer`
       outline: 2px solid ${({ theme }) => theme.colors.gray[400]};
     }
   }
-
-  button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: ${({ theme }) => theme.colors.yellow.main};
-    border: 0;
-    width: 3.6rem;
-    border-radius: 1.2rem;
-    transition: filter 0.2s;
-
-    &:hover {
-      filter: brightness(0.8);
-    }
-  }
 `;
 
 export const Comments = styled.div`
@@ -218,6 +203,15 @@ export const Comment = styled.div`
     p {
       color: ${({ theme }) => theme.colors.gray[800]};
       word-break: break-word;
+    }
+  }
+
+  .delete-btn {
+    transition: color 0.2s;
+
+    &:hover {
+      color: ${({ theme }) => theme.colors.red.main};
+      filter: brightness(1);
     }
   }
 `;

@@ -28,7 +28,7 @@ export const CreatePostBox = () => {
 
       const { data } = await serverApi.post('/posts', { content });
 
-      setAllPosts((prev) => [...prev, data.post]);
+      setAllPosts((prev) => [data.post, ...prev]);
 
       setContent('');
       // PUT NEW POST IN POSTS STATE

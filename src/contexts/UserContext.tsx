@@ -39,7 +39,7 @@ export const UserContextProvider = ({ children }: { children: ReactNode }) => {
       const { data } = await serverApi.get(`/users/${userToken?.id}`);
       setUser(data.user);
     })();
-  }, []);
+  }, [userToken]);
 
   const handleLogout = useCallback(() => {
     setUser({} as User);

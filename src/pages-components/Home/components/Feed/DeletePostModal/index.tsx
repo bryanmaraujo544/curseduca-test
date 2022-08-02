@@ -1,5 +1,9 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState, useContext } from 'react';
 import { Modal } from 'components/Modal';
+import PostService from 'services/PostService';
+import { toast } from 'utils/toast';
+import { Button } from 'components/Button';
+import { PostsContext } from 'pages-components/Home';
 import { Container } from './styles';
 
 interface Props {
@@ -13,18 +17,28 @@ export const DeletePostModal = ({
   setIsDeletePostModalOpen,
   postIdToDelete,
 }: Props) => {
-  console.log('delete modal');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const { setAllPosts } = useContext(PostsContext);
 
   function handleCloseModal() {
     setIsDeletePostModalOpen(false);
+    setIsDeleting(false);
   }
 
-  function handleDeletePost() {
+  async function handleDeletePost() {
     try {
-      // Delete post on back-end
-      console.log({ postIdToDelete });
+      setIsDeleting(true);
+
+      setAllPosts((prev) => prev.filter((post) => post.id !== postIdToDelete));
+
+      await PostService.delete(postIdToDelete);
+      toast({ status: 'success', duration: 2000, text: 'Post deletado!' });
       handleCloseModal();
-    } catch {}
+    } catch {
+      setIsDeleting(false);
+      toast({ status: 'success', duration: 2000, text: 'Post deletado!' });
+    }
   }
 
   return (
@@ -37,9 +51,15 @@ export const DeletePostModal = ({
         <button type="button" onClick={handleCloseModal}>
           Cancelar
         </button>
-        <button type="button" onClick={handleDeletePost}>
+        <Button
+          type="button"
+          onClick={handleDeletePost}
+          isLoading={isDeleting}
+          disabled={isDeleting}
+          className="delete-btn"
+        >
           Deletar
-        </button>
+        </Button>
       </Container>
     </Modal>
   );

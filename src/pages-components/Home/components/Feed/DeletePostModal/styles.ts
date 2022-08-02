@@ -25,4 +25,8 @@ export const Container = styled.div`
       color: ${({ theme }) => theme.colors.red.bg};
     }
   }
+
+  .delete-btn {
+    padding: 0 !important;
+  }
 `;

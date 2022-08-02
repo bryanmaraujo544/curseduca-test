@@ -14,6 +14,11 @@ class PostsService {
     const { data } = await serverApi.put(`/posts/${postId}`, { content });
     return data;
   }
+
+  async delete(id: number) {
+    const { data } = await serverApi.delete(`/posts/${id}`);
+    return data;
+  }
 }
 
 export default new PostsService();

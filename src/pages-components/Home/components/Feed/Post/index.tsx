@@ -6,9 +6,11 @@ import {
   Dispatch,
   SetStateAction,
   useContext,
+  FormEvent,
 } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { DateTime } from 'luxon';
 import { AiFillHeart, AiOutlineHeart, AiOutlineSend } from 'react-icons/ai';
 import { TbMessageCircle2 } from 'react-icons/tb';
 import { BsPencil, BsTrash } from 'react-icons/bs';
@@ -20,6 +22,7 @@ import PostService from 'services/PostService';
 import { PostsContext } from 'pages-components/Home';
 import { toast } from 'utils/toast';
 import { Button } from 'components/Button';
+import CommentsService from 'services/CommentsService';
 import {
   Container,
   PostHeader,
@@ -78,6 +81,8 @@ export const Post = ({
   const [newPostContent, setNewPostContent] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
+  const [isCommenting, setIsCommenting] = useState(false);
+
   const { user } = useUser();
   const commentInputRef = useRef<HTMLInputElement>(null);
   const { setAllPosts } = useContext(PostsContext);
@@ -88,12 +93,57 @@ export const Post = ({
     }
   }, [post]);
 
-  const handleCommentOnPost = useCallback(() => {
-    try {
-      console.log(commentContent);
-      setCommentContent('');
-    } catch {}
-  }, [commentContent]);
+  const handleCommentOnPost = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault();
+      try {
+        if (isCommenting) {
+          return;
+        }
+
+        if (!commentContent) {
+          toast({
+            status: 'default',
+            duration: 2000,
+            text: 'Digite algo',
+          });
+          return;
+        }
+
+        setIsCommenting(true);
+
+        const data = await CommentsService.create({
+          postId: post.id,
+          content: commentContent,
+        });
+
+        setAllPosts((prev) =>
+          prev.map((postToUpdate) => {
+            if (postToUpdate.id === post.id) {
+              return {
+                ...postToUpdate,
+                comments: [data.comment, ...postToUpdate.comments],
+              };
+            }
+            return postToUpdate;
+          })
+        );
+
+        toast({ status: 'success', duration: 2000, text: 'Comentário feito!' });
+
+        setCommentContent('');
+        setIsCommenting(false);
+      } catch {
+        setIsCommenting(false);
+        toast({
+          status: 'error',
+          duration: 2000,
+          text: 'Algo deu errado. Tente novamente',
+        });
+      }
+    },
+    [commentContent, post]
+  );
 
   const handleLikePost = useCallback(() => {
     try {
@@ -146,14 +196,53 @@ export const Post = ({
         text: 'Algo deu errado. Tente novamente',
       });
     }
-  }, [newPostContent, user]);
+  }, [newPostContent, user, post]);
 
   const handleOpenDeleteModal = useCallback(() => {
     setIsDeletePostModalOpen(true);
     setPostIdToDelete(post.id);
   }, [post]);
 
+  const handleDeleteComment = useCallback(
+    async (commentId: number) => {
+      try {
+        setAllPosts((prev) =>
+          prev.map((postToUpdate) => {
+            if (postToUpdate.id === post.id) {
+              const filteredComments = postToUpdate.comments.filter(
+                (comment) => comment.id !== commentId
+              );
+
+              return { ...postToUpdate, comments: filteredComments };
+            }
+            return postToUpdate;
+          })
+        );
+        toast({
+          status: 'success',
+          duration: 2000,
+          text: 'Comentário deletado.',
+        });
+        await CommentsService.delete(commentId);
+      } catch {
+        toast({
+          status: 'error',
+          duration: 2000,
+          text: 'Erro ao delete comentário.',
+        });
+      }
+    },
+    [post]
+  );
+
   const isMyPost = user?.id === post?.author?.id;
+
+  const createdAtFormatted = DateTime.fromISO(post.createdAt, {
+    zone: 'pt-BR',
+    setZone: true,
+  })
+    .setLocale('pt-BR')
+    .toLocaleString(DateTime.DATETIME_MED);
 
   return (
     <Container>
@@ -172,7 +261,7 @@ export const Post = ({
 
         <div className="infos-container">
           <p>{post.author.name}</p>
-          <span>{post.createdAt}</span>
+          <span>{createdAtFormatted}</span>
         </div>
 
         {isMyPost && (
@@ -259,7 +348,7 @@ export const Post = ({
 
       <hr />
 
-      <UserActions>
+      <UserActions as="form" onSubmit={handleCommentOnPost}>
         <ProfileImgBox>
           <Image
             src={
@@ -281,9 +370,14 @@ export const Post = ({
         />
 
         {commentContent && (
-          <button type="button" onClick={handleCommentOnPost}>
+          <Button
+            type="submit"
+            isLoading={isCommenting}
+            disabled={isCommenting}
+            className="comment-btn"
+          >
             <AiOutlineSend />
-          </button>
+          </Button>
         )}
       </UserActions>
 
@@ -294,7 +388,10 @@ export const Post = ({
             <Comment key={`comment-${comment.id}`}>
               <ProfileImgBox>
                 <Image
-                  src={comment.author.profileImg}
+                  src={
+                    comment.author.profileImg ||
+                    'https://avatars.githubusercontent.com/u/62571814?v=4'
+                  }
                   layout="fill"
                   objectFit="cover"
                   alt={`${comment.author.name}-img`}
@@ -305,6 +402,15 @@ export const Post = ({
                 <span>{comment.author.name}</span>
                 <p>{comment.content}</p>
               </div>
+              {user.id === comment.author.id && (
+                <Button
+                  variant="ghost"
+                  className="delete-btn"
+                  onClick={() => handleDeleteComment(comment.id)}
+                >
+                  <BsTrash />
+                </Button>
+              )}
             </Comment>
           ))}
 
