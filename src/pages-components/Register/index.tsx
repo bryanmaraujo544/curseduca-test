@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-return */
-import { useState, useCallback, FormEvent, useEffect } from 'react';
+import { useState, useCallback, FormEvent } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -11,7 +11,6 @@ import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 import { HiMail, HiUserCircle, HiKey } from 'react-icons/hi';
 import { serverApi } from 'services/serverApi';
 import { useRouter } from 'next/router';
-import { Toaster } from 'components/Toast';
 import { toast } from 'utils/toast';
 import {
   Container,
@@ -49,7 +48,11 @@ export const Register = () => {
 
       try {
         if (!isTermsAgreed) {
-          window.alert('É preciso concordar com os termos');
+          toast({
+            status: 'error',
+            text: 'É necessário concordar com os termos.',
+            duration: 3000,
+          });
           return;
         }
 
@@ -68,11 +71,21 @@ export const Register = () => {
         if (isFormValid) {
           // TODO: make the api call to create account
 
-          toast({ status: 'default', text: 'Register toast', duration: 3000 });
-          // await serverApi.post('/users', { name, email, password });
-          // router.push('/');
+          await serverApi.post('/users', { name, email, password });
+          toast({
+            status: 'success',
+            text: 'Usuário registrado',
+            duration: 2000,
+          });
+          router.push('/');
         }
-      } catch {}
+      } catch {
+        toast({
+          status: 'error',
+          text: 'Algo ocorreu errado. Verifique as informações',
+          duration: 5000,
+        });
+      }
     },
     [name, email, password, isTermsAgreed]
   );

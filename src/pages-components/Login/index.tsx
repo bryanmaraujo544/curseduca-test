@@ -9,6 +9,7 @@ import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 import { Logo } from 'components/Logo';
 import { useRouter } from 'next/router';
 import { serverApi } from 'services/serverApi';
+import { toast } from 'utils/toast';
 import {
   Container,
   Content,
@@ -38,12 +39,23 @@ export const Login = () => {
           const {
             data: { token },
           } = await serverApi.post('/auth/login', { email, password });
+          toast({
+            status: 'success',
+            text: 'Você está conectado!',
+            duration: 2000,
+          });
           nookies.set(null, 'token', token, {
             maxAge: 60 * 60 * 24 * 30, // 30 days,
           });
           router.push('/');
         }
-      } catch {}
+      } catch {
+        toast({
+          status: 'error',
+          text: 'Algo ocorreu errado. Verifique as informações',
+          duration: 5000,
+        });
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [email, password, isFormValid]

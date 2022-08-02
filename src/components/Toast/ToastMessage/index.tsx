@@ -26,7 +26,7 @@ export const ToastMessage = ({
     return () => {
       clearTimeout(timeoutRef);
     };
-  }, [id, duration]);
+  }, [id, duration, onRemoveMessage]);
 
   function handleRemoveToast() {
     onRemoveMessage(id);
