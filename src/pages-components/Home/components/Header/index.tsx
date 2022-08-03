@@ -12,8 +12,6 @@ export const Header = () => {
   const { colorMode, toggleTheme } = useTheme();
   const { handleLogout } = useUser();
 
-  console.log({ user });
-
   return (
     <Container>
       <User>
