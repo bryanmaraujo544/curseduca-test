@@ -11,8 +11,7 @@ import {
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { DateTime } from 'luxon';
-import { AiFillHeart, AiOutlineHeart, AiOutlineSend } from 'react-icons/ai';
-import { TbMessageCircle2 } from 'react-icons/tb';
+import { AiOutlineSend } from 'react-icons/ai';
 import { BsPencil, BsTrash } from 'react-icons/bs';
 import { IoOptions } from 'react-icons/io5';
 
@@ -28,12 +27,12 @@ import {
   Container,
   PostHeader,
   PostContent,
-  PostActions,
   UserActions,
   Comments,
   Comment,
   PostMenuContainer,
 } from './styles';
+import { PostActions } from './PostActions';
 
 interface Author {
   id: number;
@@ -83,7 +82,6 @@ export const Post = ({
   const [isToEditPostContent, setIsToEditPostContent] = useState(false);
   const [newPostContent, setNewPostContent] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const [isLiking, setIsLiking] = useState(false);
 
   const [isCommenting, setIsCommenting] = useState(false);
 
@@ -92,7 +90,6 @@ export const Post = ({
 
   const commentInputRef = useRef<HTMLInputElement>(null);
   const editTextAreaRef = useRef<HTMLTextAreaElement>(null);
-  const isLiked = post.likes.some((like) => like.authorId === user.id);
 
   useEffect(() => {
     if (isToEditPostContent) {
@@ -151,60 +148,6 @@ export const Post = ({
     },
     [commentContent, post]
   );
-
-  const handleLikePost = useCallback(async () => {
-    try {
-      setIsLiking(true);
-
-      const { like } = await LikesService.create({ postId: post.id });
-
-      setAllPosts((prev) =>
-        prev.map((postToUpdate) => {
-          if (postToUpdate.id === post.id) {
-            return {
-              ...postToUpdate,
-              likes: [...postToUpdate.likes, like],
-            };
-          }
-          return postToUpdate;
-        })
-      );
-
-      setIsLiking(false);
-
-      // Save in back-end
-    } catch {
-      setIsLiking(false);
-    }
-  }, [post, user]);
-
-  const handleUnlikePost = useCallback(async () => {
-    try {
-      setIsLiking(true);
-
-      await LikesService.delete({ postId: post.id });
-
-      setAllPosts((prev) =>
-        prev.map((postToUpdate) => {
-          if (postToUpdate.id === post.id) {
-            const newLikes = postToUpdate.likes.filter(
-              (like) => like.authorId !== user.id
-            );
-            return {
-              ...postToUpdate,
-              likes: newLikes,
-            };
-          }
-          return postToUpdate;
-        })
-      );
-
-      setIsLiking(false);
-      // Save in back-end
-    } catch {
-      setIsLiking(false);
-    }
-  }, [post, user]);
 
   const handleBeginPostUpdate = useCallback(() => {
     setIsToEditPostContent(true);
@@ -379,28 +322,7 @@ export const Post = ({
         )}
       </PostContent>
 
-      <PostActions>
-        <Button
-          type="button"
-          className="like-btn"
-          onClick={() => (isLiked ? handleUnlikePost() : handleLikePost())}
-          variant="ghost"
-          disabled={isLiking}
-        >
-          <AiOutlineHeart
-            style={{ opacity: !isLiked ? '1' : '0' }}
-            className="icon"
-          />
-          <AiFillHeart
-            style={{ opacity: isLiked ? '1' : '0' }}
-            className="icon liked"
-          />
-        </Button>
-        <span>{post.likes.length} likes</span>
-        <button type="button" onClick={() => commentInputRef?.current?.focus()}>
-          <TbMessageCircle2 className="icon" />
-        </button>
-      </PostActions>
+      <PostActions post={post} commentInputRef={commentInputRef} />
 
       <hr />
 
