@@ -264,8 +264,6 @@ export const Post = ({
             <textarea
               value={newPostContent}
               onChange={(e) => setNewPostContent(e.target.value)}
-              ref={editTextAreaRef}
-              onBlur={() => setIsToEditPostContent(false)}
             />
             <Button
               type="button"
