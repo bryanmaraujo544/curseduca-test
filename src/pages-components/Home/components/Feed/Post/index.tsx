@@ -22,17 +22,16 @@ import { PostsContext } from 'pages-components/Home';
 import { toast } from 'utils/toast';
 import { Button } from 'components/Button';
 import CommentsService from 'services/CommentsService';
-import LikesService from 'services/LikesService';
 import {
   Container,
   PostHeader,
   PostContent,
   UserActions,
   Comments,
-  Comment,
   PostMenuContainer,
 } from './styles';
 import { PostActions } from './PostActions';
+import { Comment } from './Comment';
 
 interface Author {
   id: number;
@@ -193,35 +192,6 @@ export const Post = ({
     setPostIdToDelete(post.id);
   }, []);
 
-  const handleDeleteComment = useCallback(async (commentId: number) => {
-    try {
-      setAllPosts((prev) =>
-        prev.map((postToUpdate) => {
-          if (postToUpdate.id === post.id) {
-            const filteredComments = postToUpdate.comments.filter(
-              (comment) => comment.id !== commentId
-            );
-
-            return { ...postToUpdate, comments: filteredComments };
-          }
-          return postToUpdate;
-        })
-      );
-      toast({
-        status: 'success',
-        duration: 2000,
-        text: 'Comentário deletado.',
-      });
-      await CommentsService.delete(commentId);
-    } catch {
-      toast({
-        status: 'error',
-        duration: 2000,
-        text: 'Erro ao delete comentário.',
-      });
-    }
-  }, []);
-
   const isMyPost = user?.id === post?.author?.id;
 
   const createdAtFormatted = DateTime.fromISO(post.createdAt, {
@@ -363,33 +333,11 @@ export const Post = ({
         {post.comments
           .slice(0, seeAllComments ? post.comments.length : 2)
           .map((comment) => (
-            <Comment key={`comment-${comment.id}`}>
-              <ProfileImgBox>
-                <Image
-                  src={
-                    comment.author.profileImg ||
-                    'https://i.pinimg.com/564x/4e/78/17/4e7817fe4a91ed1f5c9629a51c451229.jpg'
-                  }
-                  layout="fill"
-                  objectFit="cover"
-                  alt={`${comment.author.name}-img`}
-                />
-              </ProfileImgBox>
-
-              <div className="info-container">
-                <span>{comment.author.name}</span>
-                <p>{comment.content}</p>
-              </div>
-              {user.id === comment.author.id && (
-                <Button
-                  variant="ghost"
-                  className="delete-btn"
-                  onClick={() => handleDeleteComment(comment.id)}
-                >
-                  <BsTrash />
-                </Button>
-              )}
-            </Comment>
+            <Comment
+              key={`comment-${comment.id}`}
+              comment={comment}
+              postId={post.id}
+            />
           ))}
 
         {post.comments.length > 2 && (
