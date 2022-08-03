@@ -12,6 +12,8 @@ export const Header = () => {
   const { colorMode, toggleTheme } = useTheme();
   const { handleLogout } = useUser();
 
+  console.log({ user });
+
   return (
     <Container>
       <User>
@@ -19,10 +21,10 @@ export const Header = () => {
           <Image
             src={
               user.profileImg ||
-              'https://avatars.githubusercontent.com/u/62571814?v=4'
+              'https://i.pinimg.com/564x/4e/78/17/4e7817fe4a91ed1f5c9629a51c451229.jpg'
             }
             layout="fill"
-            alt="profile-img"
+            alt="profile-img1"
             objectFit="cover"
           />
         </div>

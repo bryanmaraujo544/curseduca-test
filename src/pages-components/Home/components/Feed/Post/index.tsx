@@ -287,7 +287,7 @@ export const Post = ({
           <Image
             src={
               post?.author?.profileImg ||
-              'https://avatars.githubusercontent.com/u/62571814?v=4'
+              'https://i.pinimg.com/564x/4e/78/17/4e7817fe4a91ed1f5c9629a51c451229.jpg'
             }
             layout="fill"
             objectFit="cover"
@@ -391,7 +391,7 @@ export const Post = ({
           <Image
             src={
               post?.author?.profileImg ||
-              'https://avatars.githubusercontent.com/u/62571814?v=4'
+              'https://i.pinimg.com/564x/4e/78/17/4e7817fe4a91ed1f5c9629a51c451229.jpg'
             }
             layout="fill"
             objectFit="cover"
@@ -428,7 +428,7 @@ export const Post = ({
                 <Image
                   src={
                     comment.author.profileImg ||
-                    'https://avatars.githubusercontent.com/u/62571814?v=4'
+                    'https://i.pinimg.com/564x/4e/78/17/4e7817fe4a91ed1f5c9629a51c451229.jpg'
                   }
                   layout="fill"
                   objectFit="cover"

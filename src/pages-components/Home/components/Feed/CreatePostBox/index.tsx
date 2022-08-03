@@ -5,6 +5,7 @@ import { Button } from 'components/Button';
 import { toast } from 'utils/toast';
 import { serverApi } from 'services/serverApi';
 import { PostsContext } from 'pages-components/Home';
+import { useUser } from 'hooks/useUser';
 import { Container, MainContainer } from './styles';
 
 export const CreatePostBox = () => {
@@ -13,6 +14,7 @@ export const CreatePostBox = () => {
   const [isCreating, setIsCreating] = useState(false);
 
   const { setAllPosts } = useContext(PostsContext);
+  const { user } = useUser();
 
   async function handleCreatePost(e: FormEvent) {
     e.preventDefault();
@@ -53,7 +55,10 @@ export const CreatePostBox = () => {
         <Image
           layout="fill"
           objectFit="cover"
-          src="https://avatars.githubusercontent.com/u/62571814?v=4"
+          src={
+            user.profileImg ||
+            'https://i.pinimg.com/564x/4e/78/17/4e7817fe4a91ed1f5c9629a51c451229.jpg'
+          }
           alt="Profile Image"
         />
       </ProfileImgBox>
