@@ -6,6 +6,7 @@ import {
   SetStateAction,
   useContext,
   FormEvent,
+  useEffect,
 } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -87,10 +88,17 @@ export const Post = ({
   const [isCommenting, setIsCommenting] = useState(false);
 
   const { user } = useUser();
-  const commentInputRef = useRef<HTMLInputElement>(null);
   const { setAllPosts } = useContext(PostsContext);
 
+  const commentInputRef = useRef<HTMLInputElement>(null);
+  const editTextAreaRef = useRef<HTMLTextAreaElement>(null);
   const isLiked = post.likes.some((like) => like.authorId === user.id);
+
+  useEffect(() => {
+    if (isToEditPostContent) {
+      editTextAreaRef?.current?.focus();
+    }
+  }, [isToEditPostContent]);
 
   const handleCommentOnPost = useCallback(
     async (e: FormEvent) => {
@@ -316,11 +324,19 @@ export const Post = ({
                 display: isPostMenuOpen ? 'flex' : 'none',
               }}
             >
-              <button type="button" onClick={handleBeginPostUpdate}>
+              <button
+                type="button"
+                onClick={handleBeginPostUpdate}
+                tabIndex={-1}
+              >
                 <BsPencil className="icon" />
                 Editar
               </button>
-              <button type="button" onClick={handleOpenDeleteModal}>
+              <button
+                type="button"
+                onClick={handleOpenDeleteModal}
+                tabIndex={-1}
+              >
                 <BsTrash className="icon" />
                 Deletar
               </button>
@@ -335,6 +351,8 @@ export const Post = ({
             <textarea
               value={newPostContent}
               onChange={(e) => setNewPostContent(e.target.value)}
+              ref={editTextAreaRef}
+              onBlur={() => setIsToEditPostContent(false)}
             />
             <Button
               type="button"

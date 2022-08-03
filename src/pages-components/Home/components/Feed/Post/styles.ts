@@ -34,6 +34,10 @@ export const PostMenuContainer = styled.div`
   position: relative;
   margin-left: auto;
 
+  &:focus {
+    background: red;
+  }
+
   .menu-btn {
     display: flex;
     background: none;
@@ -69,7 +73,6 @@ export const PostMenuContainer = styled.div`
       color: ${({ theme }) => theme.colors.gray[800]};
       padding: 0.4rem 0.8rem;
       border-radius: 0.8rem;
-      transition: background 0.2s;
 
       &:hover {
         background: ${({ theme }) => theme.colors.gray[400]};
