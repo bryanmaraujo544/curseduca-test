@@ -152,7 +152,7 @@ export const Post = ({
     setIsToEditPostContent(true);
     setIsPostMenuOpen(false);
     setNewPostContent(post.content);
-  }, []);
+  }, [post]);
 
   const handleEditPost = useCallback(async () => {
     try {
